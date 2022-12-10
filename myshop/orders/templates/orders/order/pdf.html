@@ -1,0 +1,65 @@
+<html>
+    <body>
+        <h1>My shop</h1>
+        <p>
+            Invoice no. {{order.id}} <br/>
+            <span class="secondary">
+                {{order.created|date:"M d, Y"}}
+            </span>
+        </p>
+        <h3>Bill to</h3>
+        <p>
+            {{order.first_name}} {{order.last_name}} <br/>
+            {{order.email}} <br/>
+            {{order.address}} <br/>
+            {{order.postal_code}}, {{order.city}}
+        </p>
+
+        <h3>Items Bought</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                <tr  class="row{% cycle "1" "2" %}">
+                    <td>{{item.product.name}}</td>
+                    <td class="num">${{item.price}}</td>
+                    <td class="num">{{item.quantity}}</td>
+                    <td class="num">${{item.get_cost}}</td>
+                </tr>
+                {% endfor %}
+               
+
+            </tbody>
+
+        </table>
+        {% if order.coupon %}
+        <table>
+            <thead>
+                <tr>
+                    <td>Coupon Code</td>
+                    <td>Subtotal Price</td>
+                    <td>Discount</td>
+                    <td>Final Price</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{order.coupon.code}}</td>
+                    <td>${{total_cost}}</td>
+                    <td style="color:red;">-${{coupon}}</td>
+                    <td>${{order.get_total_cost}}</td>
+                    
+                </tr>
+            </tbody>
+        </table>
+        {% endif %}
+        <span class="{%if order.paid%}paid{%else%}pending{%endif%}">{%if order.paid%}Paid{%else%}Pending payment{%endif%}</span>
+    </body>
+</html>
